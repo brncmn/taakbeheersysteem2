@@ -57,7 +57,7 @@
                                             class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mr-2">
                                             Annuleer
                                         </button>
-                                        <button type="submit" 
+                                        <button type="submit"
                                             class="bg-blue-600 text-black px-4 py-2 rounded-lg">
                                             Toevoegen
                                         </button>
