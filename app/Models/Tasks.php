@@ -10,14 +10,24 @@ class Tasks extends Model
     use HasFactory;
 
     protected $fillable = [
-        'task_id', 'user_id', 'assigned_at'
+        'name', 'description', 'comments', 'due_date', 'status', 'created_by'
     ];
 
-    public function task(){
-        return $this->belongsTo(Tasks::class);
+    // One Task can have many participants (users who are assigned to the task)
+    public function participants()
+    {
+        return $this->hasMany(Task_participants::class, 'task_id');
     }
 
-    public function user(){
-        return $this->belongsTo(User::class);
+    // Task has many users via the pivot table task_user (many-to-many relationship)
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id');
+    }
+
+    // Task has many files
+    public function files()
+    {
+        return $this->hasMany(Files::class, 'task_id');
     }
 }

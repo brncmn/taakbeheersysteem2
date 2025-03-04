@@ -13,11 +13,16 @@ class Task_participants extends Model
         'task_id', 'user_id', 'assigned_at'
     ];
 
-    public function task(){
+    // A Task_participant belongs to a Task
+    public function task()
+    {
         return $this->belongsTo(Tasks::class);
     }
 
-    public function user(){
+    // A Task_participant belongs to a User
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }
+
