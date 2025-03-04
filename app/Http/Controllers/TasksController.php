@@ -20,6 +20,15 @@ class TasksController extends Controller
         $users = User::all();
         return view('admin.managetasks', compact('tasks', 'users'));
     }
+    public function updateStatus(Request $request, $taskId)
+    {
+        $task = Tasks::findOrFail($taskId);
+        $task->status = $request->status;
+        $task->save();
+
+        return redirect()->route('dashboard')->with('status', 'Taakstatus bijgewerkt!');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
