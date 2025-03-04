@@ -70,7 +70,52 @@
                                 </form>
                             </div>
                         </div>
+                        <!-- Edit Task Modal -->
+                        <div id="editTaskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+                                <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Taak bewerken</h2>
 
+                                <form id="editTaskForm" method="POST">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <input type="hidden" id="editTaskId" name="task_id">
+
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 dark:text-gray-300">Taaknaam</label>
+                                        <input type="text" id="editTaskName" name="name" required
+                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 dark:text-gray-300">Status</label>
+                                        <select id="editTaskStatus" name="status"
+                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
+                                            <option value="To Do">To Do</option>
+                                            <option value="In Progress">In Progress</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="On Hold">On Hold</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 dark:text-gray-300">Einddatum</label>
+                                        <input type="date" id="editTaskDueDate" name="due_date"
+                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
+                                    </div>
+
+                                    <div class="flex justify-end">
+                                        <button type="button" id="closeEditModalBtn"
+                                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mr-2">
+                                            Annuleer
+                                        </button>
+                                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                            Opslaan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                     <!-- Task Table -->
                     <div class="overflow-x-auto">
@@ -176,6 +221,32 @@
                 taskModal.classList.add("hidden");
             }
         });
+    });
+
+    function editTask(id, name, status, due_date) {
+        document.getElementById("editTaskId").value = id;
+        document.getElementById("editTaskName").value = name;
+        document.getElementById("editTaskStatus").value = status;
+        document.getElementById("editTaskDueDate").value = due_date;
+
+        // Open the modal
+        document.getElementById("editTaskModal").classList.remove("hidden");
+
+        // Update the form action dynamically
+        document.getElementById("editTaskForm").action = `/tasks/${id}`;
+    }
+
+    // Close modal
+    document.getElementById("closeEditModalBtn").addEventListener("click", function () {
+        document.getElementById("editTaskModal").classList.add("hidden");
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener("click", function (event) {
+        const modal = document.getElementById("editTaskModal");
+        if (event.target === modal) {
+            modal.classList.add("hidden");
+        }
     });
     </script>
 </x-app-layout>
