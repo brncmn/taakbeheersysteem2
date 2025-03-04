@@ -31,7 +31,20 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'participants' => 'required',
+            'taskdescription' => 'required',
+            'information' => 'nullable',
+            'due_date' => 'required|date'
+        ]);
+
+        $task = new Task();
+        $task->name = $data['name'];
+        $task->participants_id = $data['participants'];
+        $task->description = $data['taskdescription'];
+        $task->comments = $data['information'];
+        $task->due_date = $data['due_date'];
     }
 
     /**

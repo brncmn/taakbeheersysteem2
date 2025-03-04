@@ -41,12 +41,12 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-gray-700 dark:text-gray-300">Taakbeschrijving</label>
-                                        <textarea name="description" rows="3"
+                                        <textarea name="taskdescription" rows="3"
                                                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-gray-700 dark:text-gray-300">Extra informatie</label>
-                                        <textarea name="description" rows="3"
+                                        <textarea name="information" rows="3"
                                                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
                                     </div>
 
