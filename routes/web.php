@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 Route::put('tasks/{tasks}', [TasksController::class, 'update'])->name('tasks.update');
 Route::delete('tasks/{tasks}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 Route::put('/tasks/{tasks}/status', [TasksController::class, 'updateStatus'])->name('tasks.updateStatus');
+Route::get('/alltasks', [TasksController::class, 'allTasks'])->name('alltasks');
 
 
 Route::middleware('admin')->group(function(){

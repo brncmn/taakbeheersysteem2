@@ -16,7 +16,8 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks = Tasks::where('user_id', Auth::id())->get();
+        $admin = auth()->user();
+        $tasks = Tasks::where('created_by', $admin->id)->get();
         $users = User::all();
         return view('admin.managetasks', compact('tasks', 'users'));
     }
@@ -28,7 +29,15 @@ class TasksController extends Controller
 
         return redirect()->route('dashboard')->with('status', 'Taakstatus bijgewerkt!');
     }
+    public function allTasks()
+    {
+        // Retrieve all tasks for the logged-in user or global tasks
+        $tasks = Tasks::all(); // Or you could filter tasks as per your requirement
+        $users = User::all();
 
+        return view('admin.alltasks', compact('tasks', 'users'));
+    }
+    
     /**
      * Show the form for creating a new resource.
      */

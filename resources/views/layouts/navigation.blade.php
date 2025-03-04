@@ -16,6 +16,18 @@
                         {{ __('Mijn taken') }}
                     </x-nav-link>
                 </div>
+                @if(Auth::user()->role == 1)
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <!-- Form to redirect to All Tasks Page -->
+                        <form action="{{ route('alltasks') }}" method="GET" id="allTasksForm" class="hidden">
+                            @csrf
+                        </form>
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" onclick="event.preventDefault(); document.getElementById('allTasksForm').submit();">
+                            {{ __('Alle taken') }}
+                        </x-nav-link>
+                    </div>
+                @endif
+
             </div>
 
             <!-- Settings Dropdown -->
