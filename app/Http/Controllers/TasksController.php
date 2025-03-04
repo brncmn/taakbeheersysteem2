@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tasks;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,9 @@ class TasksController extends Controller
     public function index()
     {
         $tasks = Tasks::all();
-        return view('admin.managetasks', compact('tasks'));
+        $users = User::all();
+        return view('admin.managetasks', compact('tasks', 'users'));
     }
-
     /**
      * Show the form for creating a new resource.
      */

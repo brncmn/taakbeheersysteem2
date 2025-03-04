@@ -33,6 +33,10 @@
                                         <label class="block text-gray-700 dark:text-gray-300">Toegewezen aan:</label>
                                         <select name="participants" required 
                                             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
+                                            <option value="" disabled selected>Selecteer een deelnemer</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="mb-4">

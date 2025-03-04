@@ -1,1 +1,1 @@
-<img src="{{ asset('images/managementlogo.svg') }}" alt="Management Logo" style="max-width: 150px; height: auto;" />
+<img src="{{ asset('images/managementlogo.svg') }}" alt="Management Logo" style="max-width: 120px; height: auto;" />
