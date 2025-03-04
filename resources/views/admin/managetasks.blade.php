@@ -3,6 +3,7 @@
         <h2 class="font-semibold text-2xl text-gray-900 dark:text-white">
             {{ __('Beheer taken') }}
         </h2>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </x-slot>
 
     <div class="py-6">
@@ -31,7 +32,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-gray-700 dark:text-gray-300">Toegewezen aan:</label>
-                                        <select name="participants" required 
+                                        <select name="participants[]" multiple required 
                                             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
                                             <option value="" disabled selected>Selecteer een deelnemer</option>
                                             @foreach ($users as $user)
@@ -80,6 +81,7 @@
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase">Toegewezen aan</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase">Status</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase">Verloopdatum</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase">Acties</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -111,17 +113,50 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                             {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d-m-Y') : 'No Due Date' }}
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <!-- Edit Button -->
+                                            <button onclick="editTask({{ $task->id }}, '{{ $task->name }}', '{{ $task->status }}', '{{ $task->due_date }}')" class="text-blue-500 hover:text-blue-700 text-xs font-semibold mr-2">
+                                                Edit
+                                            </button>
+                                            <!-- Delete Button -->
+                                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" id="deleteForm" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" onclick="confirmDelete()"class="text-red-500 hover:text-red-700 text-xs font-semibold">
+                                                    Verwijder
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>                                                           
+                    </div>                                
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+    function confirmDelete() {
+
+            Swal.fire({
+                title: 'Weet je het zeker?',
+                text: 'Deze actie kan niet ongedaan worden gemaakt!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ja, verwijder het!',
+                cancelButtonText: 'Annuleer'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the form
+                    document.getElementById('deleteForm').submit();
+                }
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
         const openModalBtn = document.getElementById("openModalBtn");
         const closeModalBtn = document.getElementById("closeModalBtn");

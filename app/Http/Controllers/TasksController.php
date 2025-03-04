@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tasks;
 use App\Models\User;
+use App\Models\Task_participants;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks = Tasks::all();
+        $tasks = Tasks::where('user_id', Auth::id())->get();
         $users = User::all();
         return view('admin.managetasks', compact('tasks', 'users'));
     }
@@ -31,27 +32,40 @@ class TasksController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required',
-            'participants' => 'required',
-            'taskdescription' => 'required',
-            'information' => 'nullable',
-            'due_date' => 'required|date'
-        ]);
+{
+    // Validate incoming data
+    $data = $request->validate([
+        'name' => 'required',
+        'participants' => 'required|array', // Ensure participants is an array
+        'taskdescription' => 'required',
+        'information' => 'nullable',
+        'due_date' => 'required|date'
+    ]);
 
-        $tasks = new Tasks();
-        $tasks->name = $data['name'];
-        $tasks->user_id = $data['participants'];
-        $tasks->description = $data['taskdescription'];
-        $tasks->comments = $data['information'];
-        $tasks->due_date = $data['due_date'];
-        $tasks->created_by = Auth::id();
+    // Create the new task
+    $task = new Tasks();
+    $task->name = $data['name'];
+    $task->description = $data['taskdescription'];
+    $task->comments = $data['information'];
+    $task->due_date = $data['due_date'];
+    $task->created_by = Auth::id(); // Set the current user as creator
+    $task->save();  // Save the task to the tasks table
 
-        $tasks->save();
-        session()->flash('success', 'Taak succesvol toegevoegd!');
-        return redirect()->route('admin.managetasks');  
+    // Loop through the participants and add them to the task_participants table
+    if (is_array($data['participants'])) {
+        foreach ($data['participants'] as $participantId) {
+            Task_participants::create([
+                'task_id' => $task->id, // Link the participant to the task
+                'user_id' => $participantId, // Assign the participant
+                'assigned_at' => now(), // Timestamp of when the participant is assigned
+            ]);
+        }
     }
+
+    // Flash success message and redirect to the task management page
+    session()->flash('success', 'Taak succesvol toegevoegd!');
+    return redirect()->route('admin.managetasks');  
+}
 
     /**
      * Display the specified resource.
@@ -74,7 +88,9 @@ class TasksController extends Controller
      */
     public function update(Request $request, Tasks $tasks)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->update($request->all()); // Update with the validated data
+        return redirect()->route('admin.managetasks')->with('success', 'Task updated successfully');
     }
 
     /**
@@ -82,6 +98,10 @@ class TasksController extends Controller
      */
     public function destroy(Tasks $tasks)
     {
-        //
+        $tasks->delete();
+        session()->flash('success', 'Task deleted successfully.');
+
+        // Redirect back to the tasks management page   
+        return redirect()->route('admin.managetasks');
     }
 }

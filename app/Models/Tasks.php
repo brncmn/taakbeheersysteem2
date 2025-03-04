@@ -16,7 +16,7 @@ class Tasks extends Model
     // One Task can have many participants (users who are assigned to the task)
     public function participants()
     {
-        return $this->hasMany(Task_participants::class, 'task_id');
+        return $this->belongsToMany(User::class, 'task_participants', 'task_id', 'user_id');
     }
 
     // Task has many users via the pivot table task_user (many-to-many relationship)
