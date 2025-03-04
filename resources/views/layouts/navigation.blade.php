@@ -37,10 +37,11 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('admin.managetasks')">
-                            {{ __('Beheer taken') }}
-                        </x-dropdown-link>
+                        @if(Auth::check() && Auth::user()->role == 1)
+                            <x-dropdown-link :href="route('admin.managetasks')">
+                                {{ __('Beheer taken') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
