@@ -31,7 +31,6 @@ class TasksController extends Controller
     }
     public function allTasks()
     {
-        // Retrieve all tasks for the logged-in user or global tasks
         $tasks = Tasks::all(); // Or you could filter tasks as per your requirement
         $users = User::all();
 
@@ -104,10 +103,16 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tasks $tasks)
+    public function update(Request $request, $id)
     {
-        $task = Task::findOrFail($id);
-        $task->update($request->all()); // Update with the validated data
+        $task = Tasks::findOrFail($id);
+        // $task->update($request->all()); // Update with the validated data
+        $task->name = $request->name;
+        $task->description = $request->taskdescription;
+        $task->comments = $request->comments;
+        $task->due_date = $request->due_date;
+
+        $task->save();
         return redirect()->route('admin.managetasks')->with('success', 'Task updated successfully');
     }
 
