@@ -104,17 +104,32 @@ class TasksController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        $task = Tasks::findOrFail($id);
-        // $task->update($request->all()); // Update with the validated data
-        $task->name = $request->name;
-        $task->description = $request->taskdescription;
-        $task->comments = $request->comments;
-        $task->due_date = $request->due_date;
+{
+    // Find the task by ID
+    $task = Tasks::findOrFail($id);
 
-        $task->save();
-        return redirect()->route('admin.managetasks')->with('success', 'Task updated successfully');
-    }
+    // Validate the incoming request data (optional, but recommended)
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'taskdescription' => 'nullable|string',
+        'comments' => 'nullable|string',
+        'due_date' => 'nullable|date',
+        'status' => 'required|in:To Do,In Progress,Completed,On Hold',
+    ]);
+
+    // Update the task with the data from the form
+    $task->update([
+        'name' => $request->name,
+        'taskdescription' => $request->taskdescription,
+        'comments' => $request->comments,
+        'due_date' => $request->due_date,
+        'status' => $request->status,
+    ]);
+
+    // Return back to the manage tasks page with a success message
+    return redirect()->route('admin.managetasks')->with('success', 'Task updated successfully');
+}
+
 
     /**
      * Remove the specified resource from storage.

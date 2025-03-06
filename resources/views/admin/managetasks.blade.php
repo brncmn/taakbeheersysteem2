@@ -113,64 +113,80 @@
                                             {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d-m-Y') : 'No Due Date' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            <!-- Edit Button -->
-                                            <button onclick="editTask({{ $task->id }}, '{{ $task->name }}', '{{ $task->due_date }}', '{{ $task->description }}', '{{ $task->comments }}')" class="text-blue-500 hover:text-blue-700 text-xs font-semibold mr-2">
-                                                Edit
-                                            </button>
-                                            <!-- Edit Task Modal -->
-                                            <div id="editTaskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-                                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-                                                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Taak bewerken</h2>
-                                                    <form action="{{ route('tasks.update', $task->id) }}"  id="editTaskForm" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
+                                        <!-- Edit Button -->
+                                        <button onclick="editTask({{ $task->id }}, '{{ $task->name }}', '{{ $task->due_date }}', '{{ $task->description }}', '{{ $task->comments }}', '{{ $task->status }}')" class="text-blue-500 hover:text-blue-700 text-xs font-semibold mr-2">
+                                            Edit
+                                        </button>
 
-                                                        <input type="hidden" id="editTaskId" name="task_id">
+                                        <!-- Edit Task Modal -->
+                                        <div id="editTaskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+                                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+                                                <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Taak bewerken</h2>
+                                                <form action="{{ route('tasks.update', $task->id) }}" id="editTaskForm" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
 
-                                                        <div class="mb-4">
-                                                            <label class="block text-gray-700 dark:text-gray-300">Taaknaam</label>
-                                                            <input type="text" id="editTaskName" name="name" required
+                                                    <input type="hidden" id="editTaskId" name="task_id">
+
+                                                    <div class="mb-4">
+                                                        <label class="block text-gray-700 dark:text-gray-300">Taaknaam</label>
+                                                        <input type="text" id="editTaskName" name="name" required
+                                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
+                                                    </div>                                
+
+                                                    <div class="mb-4">
+                                                        <label class="block text-gray-700 dark:text-gray-300">Taakbeschrijving</label>
+                                                        <textarea name="taskdescription" rows="3" id="editTaskDescription"
+                                                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
+                                                    </div>
+
+                                                    <div class="mb-4">
+                                                        <label class="block text-gray-700 dark:text-gray-300">Extra informatie</label>
+                                                        <textarea name="comments" rows="3" id="editTaskComment"
+                                                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
+                                                    </div>
+
+                                                    <div class="mb-4">
+                                                        <label class="block text-gray-700 dark:text-gray-300">Einddatum</label>
+                                                        <input type="date" id="editTaskDueDate" name="due_date"
+                                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
+                                                    </div>
+
+                                                    <!-- Status Field -->
+                                                    <div class="mb-4">
+                                                        <label class="block text-gray-700 dark:text-gray-300">Status</label>
+                                                        <select id="editTaskStatus" name="status"
                                                                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
-                                                        </div>                                
+                                                            <option value="To Do" {{ $task->status == 'To Do' ? 'selected' : '' }}>To Do</option>
+                                                            <option value="In Progress" {{ $task->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                                            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                                            <option value="On Hold" {{ $task->status == 'On Hold' ? 'selected' : '' }}>On Hold</option>
+                                                        </select>
+                                                    </div>
 
-                                                        <div class="mb-4">
-                                                            <label class="block text-gray-700 dark:text-gray-300">Taakbeschrijving</label>
-                                                            <textarea name="taskdescription" rows="3" id="editTaskDescription"
-                                                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
-                                                        </div>
-                                                        <div class="mb-4">
-                                                            <label class="block text-gray-700 dark:text-gray-300">Extra informatie</label>
-                                                            <textarea name="comments" rows="3" id="editTaskComment"
-                                                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
-                                                        </div>
-
-                                                        <div class="mb-4">
-                                                            <label class="block text-gray-700 dark:text-gray-300">Einddatum</label>
-                                                            <input type="date" id="editTaskDueDate" name="due_date"
-                                                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
-                                                        </div>
-
-                                                        <div class="flex justify-end">
-                                                            <button type="button" id="closeEditModalBtn"
-                                                                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mr-2">
-                                                                Annuleer
-                                                            </button>
-                                                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                                                                Opslaan
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    <div class="flex justify-end">
+                                                        <button type="button" id="closeEditModalBtn"
+                                                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mr-2">
+                                                            Annuleer
+                                                        </button>
+                                                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                                            Opslaan
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            <!-- Delete Button -->
-                                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" id="deleteForm" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="confirmDelete()"class="text-red-500 hover:text-red-700 text-xs font-semibold">
-                                                    Verwijder
-                                                </button>
-                                            </form>
-                                        </td>
+                                        </div>
+
+                                        <!-- Delete Button -->
+                                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" id="deleteForm" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" onclick="confirmDelete()" class="text-red-500 hover:text-red-700 text-xs font-semibold">
+                                                Verwijder
+                                            </button>
+                                        </form>
+                                    </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -222,12 +238,13 @@
         });
     });
 
-    function editTask(id, name, due_date, description, comments) {
+    function editTask(id, name, due_date, description, comments, status) {
         document.getElementById("editTaskId").value = id;
         document.getElementById("editTaskName").value = name;
         document.getElementById("editTaskDescription").value = description;
         document.getElementById("editTaskComment").value = comments;
         document.getElementById("editTaskDueDate").value = due_date;
+        document.getElementById("editTaskStatus").value = status;
 
         // Open the modal
         document.getElementById("editTaskModal").classList.remove("hidden");
