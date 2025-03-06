@@ -13,10 +13,10 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl font-semibold mb-4">Alle taken</h3>
                         <!-- Button for adding new task -->
-                        <button id="openModalBtn" 
+                        <!-- <button id="openModalBtn" 
                             class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
                             + Nieuwe taak toevoegen
-                        </button>
+                        </button> -->
                         <!-- Modal -->
                         <div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
