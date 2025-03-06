@@ -25,7 +25,7 @@ Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.updat
 Route::delete('tasks/{tasks}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 Route::put('/tasks/{tasks}/status', [TasksController::class, 'updateStatus'])->name('tasks.updateStatus');
 Route::get('/alltasks', [TasksController::class, 'allTasks'])->name('alltasks');
-
+Route::get('/taakbestanden', [TasksController::class, 'taskFiles'])->name('tasks.taskFiles');
 
 Route::middleware('admin')->group(function(){
     Route::get('/beheertaken', [TasksController::class, 'index'])->name('admin.managetasks');

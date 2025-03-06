@@ -23,7 +23,7 @@
                                 <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Nieuwe taak maken</h2>
 
                                 <!-- Task Form -->
-                                <form action="{{ route('tasks.store') }}" method="POST">
+                                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-4">
                                         <label class="block text-gray-700 dark:text-gray-300">Taak</label>
@@ -49,6 +49,11 @@
                                         <label class="block text-gray-700 dark:text-gray-300">Extra informatie</label>
                                         <textarea name="information" rows="3"
                                                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"></textarea>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 dark:text-gray-300">Bestand uploaden</label>
+                                        <input type="file" name="file" accept="application/pdf, image/*" 
+                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500">
                                     </div>
 
                                     <div class="mb-4">

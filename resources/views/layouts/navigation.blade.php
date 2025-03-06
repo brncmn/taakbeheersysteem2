@@ -16,6 +16,11 @@
                         {{ __('Mijn taken') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('tasks.taskFiles')" :active="request()->routeIs('tasks.taskFiles')">
+                        {{ __('Taakbestanden') }}
+                    </x-nav-link>
+                </div>
                 @if(Auth::user()->role == 1)
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <!-- Form to redirect to All Tasks Page -->

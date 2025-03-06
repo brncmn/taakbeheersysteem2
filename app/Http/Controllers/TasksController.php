@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tasks;
 use App\Models\User;
+use App\Models\Files;
 use App\Models\Task_participants;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -21,6 +22,22 @@ class TasksController extends Controller
         $users = User::all();
         return view('admin.managetasks', compact('tasks', 'users'));
     }
+    public function taskFiles()
+    {
+        // Get the logged-in user's ID
+        $userId = Auth::id();
+
+        // Fetch files where the logged-in user is a participant in the task
+        $files = Files::whereHas('task', function ($query) use ($userId) {
+            $query->whereHas('participants', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            });
+        })->with('task')->get();
+
+        return view('tasks.taskFiles', compact('files'));
+    }
+
+
     public function updateStatus(Request $request, $taskId)
     {
         $task = Tasks::findOrFail($taskId);
@@ -56,7 +73,8 @@ class TasksController extends Controller
         'participants' => 'required|array', // Ensure participants is an array
         'taskdescription' => 'required',
         'information' => 'nullable',
-        'due_date' => 'required|date'
+        'due_date' => 'required|date',
+        'files.*' => 'nullable|file|mimes:jpg,png,pdf|max:10240'
     ]);
 
     // Create the new task
@@ -68,6 +86,16 @@ class TasksController extends Controller
     $task->created_by = Auth::id(); // Set the current user as creator
     $task->save();  // Save the task to the tasks table
 
+    if($request->hasFile('file')){
+        $file = $request->file('file');
+        $filePath = $file->store('task_files', 'public');
+
+        $taskFile = new Files();
+        $taskFile->task_id = $task->id;
+        $taskFile->file_path = $filePath;
+        $taskFile->file_name = $file->getClientOriginalName();
+        $taskFile->save();
+    }
     // Loop through the participants and add them to the task_participants table
     if (is_array($data['participants'])) {
         foreach ($data['participants'] as $participantId) {
